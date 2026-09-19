@@ -6,11 +6,11 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-void bubble_sort(char** data, int size, int (*compare_func)(char** a, char** b));
-void swap_value(char** value1, char** value2);
+void bubble_sort(void* data, int size, int size_of_element, int (*compare_func)(const void* a, const void* b));
+void swap_value(void* value1, void* value2, int size);
 int compare_less(const void* a, const void* b);
 int compare_greater(const void* a, const void* b);
-int alfabet_compare(char** str1_pointer, char** str2_pointer);
-int rifm_compare(char** str1_pointer, char** str2_pointer);
+int alfabet_compare(const void* str1_pointer, const void* str2_pointer);
+int rifm_compare(const void* str1_pointer, const void* str2_pointer);
 
 #endif /* SORTING_H */

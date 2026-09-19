@@ -9,6 +9,15 @@ void save_text_to_file(char** index1, char** index2, char** index3);
 const int NUM_OF_LINES = 14;
 
 int main() {
+
+
+    int a = 9;
+    int b = 5;
+
+    swap_value(&a, &b, sizeof(int));
+
+    printf("a = %d, b = %d\n", a, b);
+
     FILE* onegin = fopen("onegin.txt", "r");
     char* text = (char*) calloc(1000, sizeof(char));
 
@@ -28,21 +37,11 @@ int main() {
     memcpy(alfabet_index, true_index, sizeof(true_index));
     memcpy(rifm_index, true_index, sizeof(true_index));
 
-    /*
-    for (int i = 0; i < 14; i++) {
-        printf("<%u>\n", true_index[i]);
-    }
+    bubble_sort(alfabet_index, 14, sizeof(alfabet_index[0]), alfabet_compare);
 
-    for (int i = 0; i < 14; i++) {
-        printf("<%u>\n", alfabet_index[i]);
-    } */
+    bubble_sort(rifm_index, 14, sizeof(rifm_index[0]), rifm_compare);
 
-
-    bubble_sort(alfabet_index, 14, alfabet_compare);
-
-    bubble_sort(rifm_index, 14, rifm_compare);
-
-    save_text_to_file(true_index, alfabet_index, rifm_index);
+    save_text_to_file(alfabet_index, rifm_index, true_index);
 }
 
 //TODO: maybe ui.c
