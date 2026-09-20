@@ -4,75 +4,60 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <fcntl.h>
+
 
 #include "sorting.h"
 #include "string_funcs.h"
 
-void save_text_to_file(char** index1, char** index2, char** index3);
+void save_text_to_file(char** index, FILE* file);
 const int NUM_OF_LINES = 14;
 
 int main()
 {
-    FILE* onegin = fopen("onegin.txt", "r");
-    char* text = (char*) calloc(1000, sizeof(char));
-    //fread(
+    struct stat file_inf;
+    stat("onegin.txt", &file_inf);
 
-    char* true_index[14] = {};
-    char* alfabet_index[14] = {};
-    char* rifm_index[14] = {};
+    int onegin = open("onegin.txt", O_RDONLY);
 
-    //TODO: make it func
-    int n_lines = 0;
-    while (n_lines != NUM_OF_LINES) {
-        true_index[n_lines] = text;
-        int num_of_letters = my_fgets(text, 1000, onegin); //TODO: macros with sizeof
-        text += num_of_letters;
-        n_lines++;
+    char* text = (char*) calloc(file_inf.st_size, sizeof(char));
+    size_t real_size = read(onegin, text, file_inf.st_size);
+
+    char** index = (char**) calloc(file_inf.st_size, sizeof(char*));
+
+    int line_num = 0;
+    index[line_num] = text;
+    line_num++;
+
+    for (size_t i = 0; i < real_size; i++) {
+        if (text[i] == '\n') {
+            text[i] = '\0';
+            index[line_num] = text + i + 1;
+            line_num++;
+        }
     }
 
-    char* a = true_index[0];
-    char* b = true_index[1];
-
-    printf("a = %s, b = %s\n", a, b);
-
-    swap_value(&a, &b, sizeof(a));
-
-    printf("a = %s, b = %s\n", a, b);
-
-    memcpy(alfabet_index, true_index, sizeof(true_index));
-    memcpy(rifm_index, true_index, sizeof(true_index));
-
-    bubble_sort(alfabet_index, 14, sizeof(alfabet_index[0]), alfabet_compare);
-
-    qsort(rifm_index, 14, sizeof(rifm_index[0]), rifm_compare);
-
-    save_text_to_file(alfabet_index, rifm_index, true_index);
-}
-
-//TODO: maybe ui.c
-void save_text_to_file(char** index1, char** index2, char** index3)
-{
     FILE* sorted_text = fopen("sorted_onegin.txt", "w");
-    for (int i = 0; i < 14; i++) {
-        const char* ch = index1[i];
-        fputs(ch, sorted_text);
-        fputs("\n", sorted_text);
-    }
-    fputs("\n", sorted_text);
 
-    for (int i = 0; i < 14; i++) {
-        const char* ch = index2[i];
-        fputs(ch, sorted_text);
-        fputs("\n", sorted_text);
-    }
-    fputs("\n", sorted_text);
+    bubble_sort(index, sizeof(*index) / sizeof(index[0]), sizeof(index[0]), alfabet_compare);
+    save_text_to_file(index, sorted_text);
 
-    for (int i = 0; i < 14; i++) {
-        const char* ch = index3[i];
-        fputs(ch, sorted_text);
-        fputs("\n", sorted_text);
-    }
-    fputs("\n", sorted_text);
+    qsort(index, sizeof(*index) / sizeof(index[0]), sizeof(index[0]), rifm_compare);
+    save_text_to_file(index, sorted_text);
+
+    bubble_sort(index, sizeof(*index) / sizeof(index[0]), sizeof(index[0]), compare_greater);
+    save_text_to_file(index, sorted_text);
 
     fclose(sorted_text);
+}
+
+void save_text_to_file(char** index, FILE* file)
+{
+    for (int i = 0; i < 14; i++) {
+        const char* ch = index[i];
+        fputs(ch, file);
+        fputs("\n", file);
+    }
+
+    fputs("\n", file);
 }
