@@ -1,23 +1,19 @@
 #include "sorting.h"
 
-//NOTE как принять массив типа void* если там лежат адреса указателей
 void bubble_sort(void* data, int size, int size_of_element, int (*compare_func)(const void* a, const void* b)) {
 
     assert(data);
     assert(compare_func);
-    char *data_m = (char*)data;
+    char* data_m = (char*)data;
 
     for (int n = 0; n < size; n++) {
         for (int i = 0; i < size - 1; i++) {
             if (compare_func(data_m + i * size_of_element, data_m + (i + 1) * size_of_element) != -1) {
-                swap_value(data_m + i * size_of_element, data_m + (i + 1) * size_of_element, sizeof(*(data_m + (i + 1) * size_of_element)));
+                swap_value(data_m + i * size_of_element, data_m + (i + 1) * size_of_element, sizeof(data_m + i * size_of_element));
             }
         }
     }
 }
-
-// FIXME: universal swap
-
 
 void swap_value(void* value1, void* value2, int size)
 {
@@ -27,8 +23,8 @@ void swap_value(void* value1, void* value2, int size)
     char* value11 = (char*) value1;
     char* value21 = (char*) value2;
 
-    char temp = 0;
     for (int i = 0; i < size; i++) {
+        char temp = 0;
         temp = value11[i];
         value11[i] = value21[i];
         value21[i] = temp;
