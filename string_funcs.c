@@ -106,6 +106,17 @@ int my_strchr(const char* string, char ch)
     }
 }
 
+int count_ch(const char* str, char ch)
+{
+    int cnt = 0;
+    for (int i = 0; str[i] != '\0'; i++) {
+        if (str[i] == ch) {
+            cnt++;
+        }
+    }
+    return cnt;
+}
+
 // TODO: strtok
 const char* my_strstr(const char* string, const char* substring)
 {

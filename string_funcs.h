@@ -19,4 +19,6 @@ const char* my_strstr(const char* string, const char* substring);
 const char* my_strrchr(const char* string, char ch);
 int my_strspn(const char* str1, const char* str2);
 int my_fgets(char* buffer, int n, FILE* file);
+int count_ch(const char* str, char ch);
+
 #endif /* STRING_H */
