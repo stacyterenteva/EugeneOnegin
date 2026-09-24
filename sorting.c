@@ -1,15 +1,16 @@
 #include "sorting.h"
 
-void bubble_sort(void* data, int size, int size_of_element, int (*compare_func)(const void* a, const void* b)) {
+void bubble_sort(void* _data, int size, int size_of_element, int (*compare_func)(const void* a, const void* b)) {
 
-    assert(data);
+    assert(_data);
     assert(compare_func);
-    char* data_m = (char*)data;
+
+    char* data = (char*)_data;
 
     for (int n = 0; n < size; n++) {
         for (int i = 0; i < size - 1; i++) {
-            if (compare_func(data_m + i * size_of_element, data_m + (i + 1) * size_of_element) != -1) {
-                swap_value(data_m + i * size_of_element, data_m + (i + 1) * size_of_element, sizeof(data_m + i * size_of_element));
+            if (compare_func(data + i * size_of_element, data + (i + 1) * size_of_element) != -1) {
+                swap_value(data + i * size_of_element, data + (i + 1) * size_of_element, sizeof(data + i * size_of_element));
             }
         }
     }
@@ -38,6 +39,7 @@ int compare_less(const void* a, const void* b)
 
     int value_a = *(const int*) a;
     int value_b = *(const int*) b;
+
     if (value_a < value_b) {
         return 1;
     }
@@ -47,8 +49,11 @@ int compare_less(const void* a, const void* b)
     else {
         return 0;
     }
+
+    assert(0 && "Unreachable");
 }
 
+// TODO: remove copypaste
 int compare_greater(const void* a, const void* b)
 {
     assert(a);
@@ -77,12 +82,10 @@ int alfabet_compare(const void* str1_pointer, const void* str2_pointer)
     assert(str1);
     assert(str2);
 
-//    fputs(str1, stderr);
-//    fprintf(stderr, "str1 = %s, str2 = %s\n", str1, str2);
-
     int compare_flag = 0;
 
     for (int i = 0, j = 0; str1[i] != '\0' && str2[j] != '\0'; i++, j++) {
+        // TODO: more carefully
         while (!isalpha(str1[i])) {
             i++;
         }
@@ -114,6 +117,8 @@ int rifm_compare(const void* str1_pointer, const void* str2_pointer)
 
     int i = 0;
     int j = 0;
+    // TODO: use `strnul`
+
     while (str1[i] != '\0') {
         i++;
     }
@@ -122,8 +127,6 @@ int rifm_compare(const void* str1_pointer, const void* str2_pointer)
     while (str2[j] != '\0') {
         j++;
     }
-
-    // TODO: разобраться, что имелось в виду
     for (; i > 0 && j > 0; i--, j--) {
         while (!isalpha(str1[i])) {
             i--;
@@ -142,8 +145,8 @@ int rifm_compare(const void* str1_pointer, const void* str2_pointer)
             break;
         }
     }
-    return compare_flag;
 
-    }
+    return compare_flag;
+}
 
 
